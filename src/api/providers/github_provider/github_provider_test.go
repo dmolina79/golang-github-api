@@ -50,7 +50,7 @@ func TestCreateRepoErrorUnauthorized(t *testing.T) {
 		HttpMethod: http.MethodPost,
 		Response: &http.Response{
 			StatusCode: http.StatusUnauthorized,
-			Body: ioutil.NopCloser(strings.NewReader(`{"message":"Requires authentication","documentation_url":"https://developer.github.com/v3/repos/#create"}`)),
+			Body:       ioutil.NopCloser(strings.NewReader(`{"message":"Requires authentication","documentation_url":"https://developer.github.com/v3/repos/#create"}`)),
 		},
 	})
 
@@ -69,7 +69,7 @@ func TestCreateRepoSuccess(t *testing.T) {
 		HttpMethod: http.MethodPost,
 		Response: &http.Response{
 			StatusCode: http.StatusCreated,
-			Body: ioutil.NopCloser(strings.NewReader(`{"id": 123, "name": "golang-repo", "full_name": "dmolina79/golang-github-api"}`)),
+			Body:       ioutil.NopCloser(strings.NewReader(`{"id": 123, "name": "golang-repo", "full_name": "dmolina79/golang-github-api"}`)),
 		},
 	})
 

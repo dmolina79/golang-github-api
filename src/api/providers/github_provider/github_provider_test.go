@@ -5,14 +5,22 @@ import (
 	"github.com/dmolina79/golang-github-api/src/api/client/restclient"
 	"github.com/dmolina79/golang-github-api/src/api/domain/github"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 )
 
 func TestMain(t *testing.M) {
 	restclient.StartMockups()
 	os.Exit(t.Run())
+}
+
+func TestConstants(t *testing.T) {
+	assert.EqualValues(t, "Authorization", headerAuthorization)
+	assert.EqualValues(t, "token %s", headerAuthorizationFormat)
+	assert.EqualValues(t, "https://api.github.com/user/repos", urlCreateRepo)
 }
 
 func Test_getAuthorizationHeader(t *testing.T) {
@@ -33,5 +41,26 @@ func TestCreateRepoErrorRestclient(t *testing.T) {
 	assert.Nil(t, response)
 	assert.NotNil(t, err)
 	assert.EqualValues(t, "Invalid rest client response", err.Message)
+	restclient.StopMockups()
+}
+
+func TestCreateRepoErrorUnauthorized(t *testing.T) {
+	restclient.FlushMockups()
+	restclient.AddMockUp(restclient.Mock{
+		Url:        "https://api.github.com/user/repos",
+		HttpMethod: http.MethodPost,
+		Response: &http.Response{
+			Status:     "401",
+			StatusCode: http.StatusUnauthorized,
+			Body: ioutil.NopCloser(strings.NewReader(`{"message":"Requires authentication","documentation_url":"https://developer.github.com/v3/repos/#create"}`)),
+		},
+	})
+
+	response, err := CreateRepo("", github.CreateRepoRequest{})
+
+	assert.Nil(t, response)
+	assert.NotNil(t, err)
+	assert.EqualValues(t, http.StatusUnauthorized, err.StatusCode)
+	assert.EqualValues(t, "Requires authentication", err.Message)
 	restclient.StopMockups()
 }

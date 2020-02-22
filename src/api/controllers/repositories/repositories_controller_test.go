@@ -5,7 +5,7 @@ import (
 	"github.com/dmolina79/golang-github-api/src/api/client/restclient"
 	"github.com/dmolina79/golang-github-api/src/api/domain/repositories"
 	"github.com/dmolina79/golang-github-api/src/api/utils/errors"
-	"github.com/gin-gonic/gin"
+	"github.com/dmolina79/golang-github-api/src/api/utils/test_utils"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -21,11 +21,9 @@ func TestMain(m *testing.M) {
 }
 
 func TestCreateRepoInvalidJsonRequest(t *testing.T) {
-	response := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(response)
-
 	request, _ := http.NewRequest(http.MethodPost, "/repo", strings.NewReader(``))
-	c.Request = request
+	response := httptest.NewRecorder()
+	c := test_utils.GetMockContext(request, response)
 
 	CreateRepo(c)
 
@@ -39,12 +37,6 @@ func TestCreateRepoInvalidJsonRequest(t *testing.T) {
 }
 
 func TestCreateRepo_ErrorInGH(t *testing.T) {
-	response := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(response)
-
-	request, _ := http.NewRequest(http.MethodPost, "/repo", strings.NewReader(`{ "name": "github-repo"}`))
-	c.Request = request
-
 	restclient.FlushMockups()
 	restclient.AddMockUp(restclient.Mock{
 		Url:        "https://api.github.com/user/repos",
@@ -54,6 +46,9 @@ func TestCreateRepo_ErrorInGH(t *testing.T) {
 			Body:       ioutil.NopCloser(strings.NewReader(`{"message":"Requires authentication","documentation_url":"https://developer.github.com/docs"}`)),
 		},
 	})
+	request, _ := http.NewRequest(http.MethodPost, "/repo", strings.NewReader(`{ "name": "github-repo"}`))
+	response := httptest.NewRecorder()
+	c := test_utils.GetMockContext(request, response)
 
 	CreateRepo(c)
 
@@ -67,12 +62,6 @@ func TestCreateRepo_ErrorInGH(t *testing.T) {
 }
 
 func TestCreateRepo_GoGood(t *testing.T) {
-	response := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(response)
-
-	request, _ := http.NewRequest(http.MethodPost, "/repo", strings.NewReader(`{ "name": "github-repo"}`))
-	c.Request = request
-
 	restclient.FlushMockups()
 	restclient.AddMockUp(restclient.Mock{
 		Url:        "https://api.github.com/user/repos",
@@ -82,6 +71,9 @@ func TestCreateRepo_GoGood(t *testing.T) {
 			Body:       ioutil.NopCloser(strings.NewReader(`{ "id": 123 }`)),
 		},
 	})
+	request, _ := http.NewRequest(http.MethodPost, "/repo", strings.NewReader(`{ "name": "github-repo"}`))
+	response := httptest.NewRecorder()
+	c := test_utils.GetMockContext(request, response)
 
 	CreateRepo(c)
 

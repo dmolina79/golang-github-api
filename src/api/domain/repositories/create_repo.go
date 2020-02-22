@@ -27,7 +27,7 @@ type CreateRepoResponse struct {
 
 type CreateReposResponse struct {
 	StatusCode int                 `json:"status"`
-	Result     []CreateReposResult `json:"result"`
+	Results     []CreateReposResult `json:"result"`
 }
 
 type CreateReposResult struct {

@@ -69,7 +69,7 @@ func TestCreateRepoSuccess(t *testing.T) {
 		HttpMethod: http.MethodPost,
 		Response: &http.Response{
 			StatusCode: http.StatusCreated,
-			Body:       ioutil.NopCloser(strings.NewReader(`{"id": 123, "name": "golang-repo", "full_name": "dmolina79/golang-github-api"}`)),
+			Body:       ioutil.NopCloser(strings.NewReader(`{"id": 123, "name": "my-github-repo", "owner": { "login": "dmolina79" } }`)),
 		},
 	})
 
@@ -78,6 +78,6 @@ func TestCreateRepoSuccess(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, r)
 	assert.EqualValues(t, 123, r.Id)
-	assert.EqualValues(t, "golang-repo", r.Name)
-	assert.EqualValues(t, "dmolina79/golang-github-api", r.FullName)
+	assert.EqualValues(t, "my-github-repo", r.Name)
+	assert.EqualValues(t, "dmolina79", r.Owner.Login)
 }

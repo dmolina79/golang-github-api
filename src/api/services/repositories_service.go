@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"github.com/dmolina79/golang-github-api/src/api/config"
 	"github.com/dmolina79/golang-github-api/src/api/domain/github"
 	"github.com/dmolina79/golang-github-api/src/api/domain/repositories"
@@ -71,7 +72,7 @@ func (s *reposService) CreateRepos(req []repositories.CreateRepoRequest) (reposi
 	result := <-output
 
 	successCreations := 0
-	for _, current := range result.Result {
+	for _, current := range result.Results {
 		if current.Response != nil {
 			successCreations++
 		}
@@ -81,10 +82,11 @@ func (s *reposService) CreateRepos(req []repositories.CreateRepoRequest) (reposi
 	case len(req):
 		result.StatusCode = http.StatusCreated
 	case 0:
-		result.StatusCode = result.Result[0].Error.Status()
+		result.StatusCode = result.Results[0].Error.Status()
 	default:
 		result.StatusCode = http.StatusPartialContent
 	}
+	fmt.Println(fmt.Sprintf("successCreations %v", successCreations))
 
 	return result, nil
 }
@@ -97,7 +99,7 @@ func (s *reposService) handleRepoResults(wg *sync.WaitGroup, input chan reposito
 			Response: incomingRes.Response,
 			Error:    incomingRes.Error,
 		}
-		results.Result = append(results.Result, repoResult)
+		results.Results = append(results.Results, repoResult)
 
 		wg.Done()
 	}

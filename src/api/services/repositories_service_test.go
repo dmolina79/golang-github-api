@@ -111,7 +111,7 @@ func TestReposService_CreateRepoConcurrent_ErrorFromGH(t *testing.T) {
 			Body:       ioutil.NopCloser(strings.NewReader(`{"message":"Requires authentication","documentation_url":"https://developer.github.com/docs"}`)),
 		},
 	})
-	request := repositories.CreateRepoRequest{Name:"my-github-repo"}
+	request := repositories.CreateRepoRequest{Name: "my-github-repo"}
 	output := make(chan repositories.CreateReposResult)
 	service := reposService{}
 
@@ -137,7 +137,7 @@ func TestReposService_CreateRepoConcurrent_GoGood(t *testing.T) {
 			Body:       ioutil.NopCloser(strings.NewReader(`{"id": 123, "name": "my-github-repo", "owner": { "login": "dmolina79" } }`)),
 		},
 	})
-	request := repositories.CreateRepoRequest{Name:"my-github-repo"}
+	request := repositories.CreateRepoRequest{Name: "my-github-repo"}
 	output := make(chan repositories.CreateReposResult)
 	service := reposService{}
 
@@ -163,7 +163,7 @@ func TestReposService_HandleRepoResults(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		input <- repositories.CreateReposResult{
-			Error:    errors.NewBadRequestError("invalid repository name"),
+			Error: errors.NewBadRequestError("invalid repository name"),
 		}
 	}()
 

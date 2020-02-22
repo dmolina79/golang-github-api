@@ -5,6 +5,7 @@ import (
 	"github.com/dmolina79/golang-github-api/src/api/config"
 	"github.com/dmolina79/golang-github-api/src/api/domain/github"
 	"github.com/dmolina79/golang-github-api/src/api/domain/repositories"
+	"github.com/dmolina79/golang-github-api/src/api/log"
 	"github.com/dmolina79/golang-github-api/src/api/providers/github_provider"
 	"github.com/dmolina79/golang-github-api/src/api/utils/errors"
 	"net/http"
@@ -27,6 +28,7 @@ func init() {
 }
 
 func (s *reposService) CreateRepo(input repositories.CreateRepoRequest) (*repositories.CreateRepoResponse, errors.ApiError) {
+	clientId := "1"
 	if err := input.Validate(); err != nil {
 		return nil, err
 	}
@@ -37,12 +39,15 @@ func (s *reposService) CreateRepo(input repositories.CreateRepoRequest) (*reposi
 		Private:     false,
 	}
 
+	log.Info("sending request to external api", fmt.Sprintf("client_id:%s", clientId), "status:pending")
 	res, err := github_provider.CreateRepo(config.GetGithubAccessToken(), request)
 
 	if err != nil {
+		log.Error("sending request to external api", err, fmt.Sprintf("client_id:%s", clientId), "status:error")
 		return nil, errors.NewApiError(err.StatusCode, err.Message)
 	}
 
+	log.Info("response obtained from external api", fmt.Sprintf("client_id:%s", clientId), "status:success")
 	result := repositories.CreateRepoResponse{
 		Id:    res.Id,
 		Owner: res.Owner.Login,

@@ -13,3 +13,7 @@ type GithubErrorResponse struct {
 	DocumentationUrl string        `json:"documentation_url"`
 	Errors           []GithubError `json:"errors"`
 }
+
+func (r GithubErrorResponse) Error() string {
+	return r.Message
+}

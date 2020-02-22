@@ -18,7 +18,7 @@ func CreateRepo(c *gin.Context) {
 
 	res, err := services.RepositoryService.CreateRepo(request)
 	if err != nil {
-		c.JSON(err.Status(), res)
+		c.JSON(err.Status(), err)
 		return
 	}
 

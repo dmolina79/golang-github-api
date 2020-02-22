@@ -42,7 +42,7 @@ func TestReposService_CreateRepo_HandleErrorFromGH(t *testing.T) {
 	})
 
 	req := repositories.CreateRepoRequest{
-		Name:"github-repo",
+		Name: "github-repo",
 	}
 
 	// execute
@@ -71,7 +71,7 @@ func TestReposService_CreateRepo_GoGood(t *testing.T) {
 	})
 
 	req := repositories.CreateRepoRequest{
-		Name:"github-repo",
+		Name: "github-repo",
 	}
 
 	// execute

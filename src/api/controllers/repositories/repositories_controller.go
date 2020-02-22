@@ -11,7 +11,7 @@ import (
 func CreateRepo(c *gin.Context) {
 	var request repositories.CreateRepoRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		apiErr := errors.NewBadRequestError("Invalid Json Body")
+		apiErr := errors.NewBadRequestError("invalid json body")
 		c.JSON(apiErr.Status(), apiErr)
 		return
 	}

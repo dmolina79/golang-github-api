@@ -7,5 +7,5 @@ import (
 
 func setupRoutes() {
 	router.POST("/repo", repositories.CreateRepo)
-	router.GET("/marco", polo.Polo)
+	router.GET("/marco", polo.Marco)
 }

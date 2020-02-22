@@ -10,7 +10,6 @@ func init() {
 	router = gin.Default()
 }
 
-
 func StartApp() {
 	setupRoutes()
 	if err := router.Run(":8080"); err != nil {

@@ -1,7 +1,7 @@
 package repositories
 
 type CreateRepoRequest struct {
-	Name string `json:"name"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
 }
 
